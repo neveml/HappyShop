@@ -63,21 +63,52 @@ public class CustomerModel {
     }
 
     void addToTrolley(){
+        //Check if product was searched
         if(theProduct!= null){
 
             // trolley.add(theProduct) — Product is appended to the end of the trolley.
             // To keep the trolley organized, add code here or call a method that:
             //TODO
             // 1. Merges items with the same product ID (combining their quantities).
-            // 2. Sorts the products in the trolley by product ID.
-            trolley.add(theProduct);
-            displayTaTrolley = ProductListFormatter.buildString(trolley); //build a String for trolley so that we can show it
+            boolean merged = false; //false so if becomes true that means theres product with same id in trolley
+
+            for (Product p : trolley) { //for every product in trolley object
+                if (p.getProductId().equals(theProduct.getProductId())) { //compare strings of product instances; if same id
+
+                    //Incrementing when another product is added
+                    p.setOrderedQuantity(p.getOrderedQuantity() + 1);
+
+                    merged = true;
+                }
+            }
+
+            //If product not found
+            if (!merged) {
+                //Create new product object
+                Product newProduct = new Product(
+                        theProduct.getProductId(),
+                        theProduct.getProductDescription(),
+                        theProduct.getProductImageName(),
+                        theProduct.getUnitPrice(),
+                        theProduct.getStockQuantity()
+                );
+
+                newProduct.setOrderedQuantity(1);
+                trolley.add(newProduct);
+            }
+
+            //Sorting trolley by product id once mergers are complete then
+            trolley.sort((p1, p2) ->
+                    p1.getProductId().compareTo(p2.getProductId())
+            );
+
+            displayTaTrolley = ProductListFormatter.buildString(trolley);
+        } else {
+            displayLaSearchResult =
+                    "Please search for an available product before adding it to the trolley"; //if no product selected
         }
-        else{
-            displayLaSearchResult = "Please search for an available product before adding it to the trolley";
-            System.out.println("must search and get an available product before add to trolley");
-        }
-        displayTaReceipt=""; // Clear receipt to switch back to trolleyPage (receipt shows only when not empty)
+
+        displayTaReceipt = "";
         updateView();
     }
 
