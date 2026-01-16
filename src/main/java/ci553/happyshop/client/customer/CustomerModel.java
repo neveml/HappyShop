@@ -68,9 +68,9 @@ public class CustomerModel {
 
             // trolley.add(theProduct) — Product is appended to the end of the trolley.
             // To keep the trolley organized, add code here or call a method that:
-            //TODO
+
             // 1. Merges items with the same product ID (combining their quantities).
-            boolean merged = false; //false so if becomes true that means theres product with same id in trolley
+            boolean merge = false; //false so if becomes true that means theres product with same id in trolley
 
             for (Product p : trolley) { //for every product in trolley object
                 if (p.getProductId().equals(theProduct.getProductId())) { //compare strings of product instances; if same id
@@ -78,18 +78,18 @@ public class CustomerModel {
                     //Incrementing when another product is added
                     p.setOrderedQuantity(p.getOrderedQuantity() + 1);
 
-                    merged = true;
+                    merge = true;
                 }
             }
 
-            //If product not found
-            if (!merged) {
+            //If same product id
+            if (!merge) {
                 //Create new product object
                 Product newProduct = new Product(
                         theProduct.getProductId(),
                         theProduct.getProductDescription(),
                         theProduct.getProductImageName(),
-                        theProduct.getUnitPrice(),
+                        theProduct.getUnitPrice(),  //for outputting price in display window
                         theProduct.getStockQuantity()
                 );
 
@@ -97,8 +97,8 @@ public class CustomerModel {
                 trolley.add(newProduct);
             }
 
-            //Sorting trolley by product id once mergers are complete then
-            trolley.sort((p1, p2) ->
+            //Sorting trolley by product id once merge complete
+            trolley.sort((p1, p2) -> //using lambdas
                     p1.getProductId().compareTo(p2.getProductId())
             );
 
